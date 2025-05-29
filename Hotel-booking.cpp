@@ -208,7 +208,15 @@ void loadCustomersFromFile() {
 
 void displayAvailableRooms() {
  
-    
+     cout << "\nAvailable Rooms:\n";
+    bool found = false;
+    for (int i = 1; i <= ROOM_COUNT; ++i) {
+        if (!rooms[i]) {
+            cout << "- Room " << i ;
+            found = true;
+        }
+    }
+    if (!found) cout << "No rooms available.\n";
     
     
 }
@@ -216,7 +224,35 @@ void displayAvailableRooms() {
 
 void bookRoom() {
   
-    
+      Customer* newCustomer = new Customer;
+    newCustomer->id = inputID();
+    newCustomer->name = inputName();
+    newCustomer->phone = inputPhone();
+    newCustomer->roomNumber = inputRoom();
+
+    newCustomer->checkIn = inputDate("Enter Check-in Date (DD/MM/YYYY)");
+
+    newCustomer->checkOut = inputDate("Enter Check-out Date (DD/MM/YYYY)", newCustomer->checkIn, true, newCustomer->checkIn);
+
+    newCustomer->stayDays = calculateStayDays(newCustomer->checkIn, newCustomer->checkOut);
+
+    newCustomer->totalBill = newCustomer->stayDays * PRICE_PER_DAY;
+
+    newCustomer->next = nullptr;
+
+    rooms[newCustomer->roomNumber] = true;
+
+    if (!head) head = newCustomer;
+    else {
+        Customer* temp = head;
+        while (temp->next) temp = temp->next;
+        temp->next = newCustomer;
+    }
+
+saveCustomersToFile();
+    cout << "Room booked successfully!\n";
+    cout << "Stay Days: " << newCustomer->stayDays << " days\n";
+    cout << "Total Bill: " << newCustomer->totalBill << " Birr\n";
 
     
 }
