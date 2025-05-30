@@ -206,7 +206,24 @@ void saveCustomersToFile() {
 }
 
 void loadCustomersFromFile() {
-   
+         ifstream file("customers.txt");
+    string line;
+    while (getline(file, line)) {
+        Customer* cust = new Customer;
+        stringstream ss(line);
+        string field;
+        getline(ss, cust->id, ',');
+        getline(ss, cust->name, ',');
+        getline(ss, cust->phone, ',');
+        getline(ss, field, ','); cust->roomNumber = stoi(field);
+        getline(ss, cust->checkIn, ',');
+        getline(ss, cust->checkOut, ',');
+        getline(ss, field, ','); cust->stayDays = stoll(field);
+        getline(ss, field, ','); cust->totalBill = stoll(field);
+        cust->next = head;
+        head = cust;
+        rooms[cust->roomNumber] = true;
+    }
     
        
     
