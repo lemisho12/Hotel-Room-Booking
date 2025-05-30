@@ -192,7 +192,15 @@ int inputRoom() {
 
 
 void saveCustomersToFile() {
-   
+   ofstream file("customers.txt");
+    Customer* temp = head;
+    while (temp) {
+        file << temp->id << "," << temp->name << "," << temp->phone << ","
+             << temp->roomNumber << "," << temp->checkIn << "," << temp->checkOut << ","
+             << temp->stayDays << "," << temp->totalBill << "\n";
+        temp = temp->next;
+    }
+    file.close();
     
     
 }
