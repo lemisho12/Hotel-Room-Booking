@@ -235,7 +235,30 @@ void updateBooking() {
 }
 
 void deleteBooking() {
-    
+    string id = inputID();
+    Customer *temp = head, *prev = nullptr;
+
+    while (temp) {
+        if (temp->id == id) {
+            ofstream outFile("archived_customers.txt", ios::app);
+            outFile << temp->id << "," << temp->name << "," << temp->phone << ","
+                    << temp->roomNumber << "," << temp->checkIn << "," << temp->checkOut
+                    << "," << temp->stayDays << "," << temp->totalBill << "\n";
+            outFile.close();
+
+            rooms[temp->roomNumber] = false;
+            if (!prev) head = temp->next;
+            else prev->next = temp->next;
+
+            delete temp;
+            saveCustomersToFile();
+            cout << "Customer checked out and archived.\n";
+            return;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    cout << "Customer not found.\n";
     
     
 }
