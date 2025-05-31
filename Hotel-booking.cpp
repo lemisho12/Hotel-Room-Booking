@@ -229,6 +229,62 @@ void printCustomerDetails(Customer* customer) {
 
 void updateBooking() {
    
+ string id = inputID();
+    Customer* temp = head;
+
+    while (temp) {
+        if (temp->id == id) {
+            tm currentCheckOutTm = parseDate(temp->checkOut);
+            tm currentDateTm = getCurrentDate();
+
+            if (isDatePast(currentCheckOutTm, currentDateTm)) {
+
+                cout << "Customer's check-out date is in the past. Allowing extension for " << EXTENSION_DAYS << " days from today.\n";
+                currentCheckOutTm = currentDateTm; // Start extension from today
+            }
+
+            time_t timeCheckOut = mktime(&currentCheckOutTm);
+            timeCheckOut += (EXTENSION_DAYS * 24 * 60 * 60); 
+            tm maxNewCheckOutTm = *localtime(&timeCheckOut);
+            maxNewCheckOutTm.tm_hour = 0;
+            maxNewCheckOutTm.tm_min = 0;
+            maxNewCheckOutTm.tm_sec = 0;
+            maxNewCheckOutTm.tm_isdst = -1;
+
+            string maxNewCheckOutStr = formatDate(maxNewCheckOutTm);
+
+            cout << "Current check-out date for " << temp->name << " (ID: " << temp->id << "): " << temp->checkOut << "\n";
+            cout << "You can extend the stay for an additional " << EXTENSION_DAYS << " days from the original check-out date (or current date if already past).\n";
+            cout << "The new check-out date cannot exceed: " << maxNewCheckOutStr << "\n";
+ cout << "You can extend the stay for an additional " << EXTENSION_DAYS << " days from the original check-out date (or current date if already past).\n";
+            cout << "The new check-out date cannot exceed: " << maxNewCheckOutStr << "\n";
+
+
+            string newCheckOut;
+            while (true) {
+                newCheckOut = inputDate("Enter new check-out date (DD/MM/YYYY)", temp->checkIn);
+                tm newCheckOutTm = parseDate(newCheckOut);
+
+                if (difftime(mktime(&newCheckOutTm), mktime(&maxNewCheckOutTm)) > 0) {
+                    cout << "Error: The new check-out date exceeds the maximum allowed extension of " << EXTENSION_DAYS << " days. Please enter a date on or before " << maxNewCheckOutStr << ".\n";
+                } else {
+                    break;
+                }
+            }
+
+
+            temp->checkOut = newCheckOut;
+            temp->stayDays = calculateStayDays(temp->checkIn, temp->checkOut);
+            temp->totalBill = temp->stayDays * PRICE_PER_DAY;
+ saveCustomersToFile();
+            cout << "Booking updated successfully!\n";
+            cout << "New Stay Days: " << temp->stayDays << " days\n";
+            cout << "New Total Bill: " << temp->totalBill << " Birr\n";
+            return;
+        }
+        temp = temp->next;
+    }
+    cout << "Customer not found.\n"
     
             
     
