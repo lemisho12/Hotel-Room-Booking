@@ -192,13 +192,36 @@ int inputRoom() {
 
 
 void saveCustomersToFile() {
+       ofstream file("customers.txt");
+    Customer* temp = head;
+    while (temp) {
+        file << temp->id << "," << temp->name << "," << temp->phone << ","
+             << temp->roomNumber << "," << temp->checkIn << "," << temp->checkOut << ","
+             << temp->stayDays << "," << temp->totalBill << "\n";
+        temp = temp->next;
+    }
    
-    
-    
 }
 
 void loadCustomersFromFile() {
-   
+    ifstream file("customers.txt");
+    string line;
+    while (getline(file, line)) {
+        Customer* cust = new Customer;
+        stringstream ss(line);
+        string field;
+        getline(ss, cust->id, ',');
+        getline(ss, cust->name, ',');
+        getline(ss, cust->phone, ',');
+        getline(ss, field, ','); cust->roomNumber = stoi(field);
+        getline(ss, cust->checkIn, ',');
+        getline(ss, cust->checkOut, ',');
+        getline(ss, field, ','); cust->stayDays = stoll(field);
+        getline(ss, field, ','); cust->totalBill = stoll(field);
+        cust->next = head;
+        head = cust;
+        rooms[cust->roomNumber] = true;
+    }
     
        
     
