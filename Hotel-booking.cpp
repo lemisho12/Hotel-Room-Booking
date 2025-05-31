@@ -274,19 +274,122 @@ void searchCustomerByName() {
 }
 
 void sortCustomersByID() {
-   
+     if (  !head->next) {
+        cout << "Not enough customers to sort.\n";
+        return;
+    }
+
+    for (Customer* i = head; i != nullptr; i = i->next) {
+        for (Customer* j = i->next; j != nullptr; j = j->next) {
+            if (i->id > j->id) {
+
+                swap(i->id, j->id);
+                swap(i->name, j->name);
+                swap(i->phone, j->phone);
+                swap(i->roomNumber, j->roomNumber);
+                swap(i->checkIn, j->checkIn);
+                swap(i->checkOut, j->checkOut);
+                swap(i->stayDays, j->stayDays);
+                swap(i->totalBill, j->totalBill);
+            }
+        }
+    }
+    cout << "Customers sorted by ID.\n";
+    saveCustomersToFile();
     
 }
 
 void sortCustomersByName() {
-    
+      if (  !head->next) {
+        cout << "Not enough customers to sort.\n";
+        return;
+    }
+
+    for (Customer* i = head; i != nullptr; i = i->next) {
+        for (Customer* j = i->next; j != nullptr; j = j->next) {
+            if (i->name > j->name) {
+
+                swap(i->id, j->id);
+                swap(i->name, j->name);
+                swap(i->phone, j->phone);
+                swap(i->roomNumber, j->roomNumber);
+                swap(i->checkIn, j->checkIn);
+                swap(i->checkOut, j->checkOut);
+                swap(i->stayDays, j->stayDays);
+                swap(i->totalBill, j->totalBill);
+            }
+        }
+    }
+    cout << "Customers sorted by Name.\n";
+    saveCustomersToFile();
     
 }
 
 void displayBookedRooms() {
 
 
-        
+        if (!head) {
+        cout << "No bookings found.\n";
+        return;
+    }
+
+    char sortChoice;
+    cout << "Do you want to sort the displayed customers? (y/n): ";
+    cin >> sortChoice;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    if (tolower(sortChoice) == 'y') {
+        char sortCriteria;
+        cout << "Sort by (N)ame or (I)D?: ";
+        cin >> sortCriteria;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (tolower(sortCriteria) == 'n') {
+            sortCustomersByName();
+        } else if (tolower(sortCriteria) == 'i') {
+            sortCustomersByID();
+        } else {
+            cout << "Invalid sort criteria. Displaying unsorted.\n";
+        }
+    }
+
+    char searchChoice;
+    cout << "Do you want to search for a specific customer? (y/n): ";
+    cin >> searchChoice;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+if (tolower(searchChoice) == 'y') {
+        char searchCriteria;
+        cout << "Search by (N)ame or (I)D?: ";
+        cin >> searchCriteria;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (tolower(searchCriteria) == 'n') {
+            searchCustomerByName();
+        } else if (tolower(searchCriteria) == 'i') {
+            searchCustomerByID();
+        } else {
+            cout << "Invalid search criteria. Displaying all booked customers.\n";
+            Customer* temp = head;
+            cout << left << setw(16) << "ID" << setw(32) << "Name" << setw(14)
+                 << "Phone" << setw(8) << "Room" << setw(14) << "Check-In"
+                 << setw(14) << "Check-Out" << setw(8) << "Days" << "Bill\n";
+
+            while (temp) {
+                printCustomerDetails(temp);
+                temp = temp->next;
+            }
+        }
+    } else {
+        Customer* temp = head;
+        cout << left << setw(16) << "ID" << setw(32) << "Name" << setw(14)
+             << "Phone" << setw(8) << "Room" << setw(14) << "Check-In"
+             << setw(14) << "Check-Out" << setw(8) << "Days" << "Bill\n";
+
+        while (temp) {
+            printCustomerDetails(temp);
+            temp = temp->next;
+        }
+    }
             
 }
 
